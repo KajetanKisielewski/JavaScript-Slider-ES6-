@@ -2,31 +2,38 @@ export default class JSSLider {
     constructor( imageSelector , sliderRootSelector ) {
         this.imagesSelector = imageSelector;
         this.sliderRootSelector = sliderRootSelector;
-        this.interval;
     }
 
     run() {
 
-    this.imagesList = document.querySelectorAll(this.imagesSelector);
+        this.imagesList = document.querySelectorAll(this.imagesSelector);
+        this.sliderRootElement = document.querySelector(this.sliderRootSelector);
 
-    this.sliderRootElement = document.querySelector(this.sliderRootSelector);
+        this.initEvents();
+        this.initCustomEvents();
 
-    this.initEvents();
-    this.initCustomEvents();
-
-
+        this.interval;
     }
 
     initEvents() {
-    this.imagesList.forEach( (item) =>  {
-        item.addEventListener('click', (e) => {
-            this.fireCustomEvent(e.currentTarget, 'js-slider-img-click');
-        });
-         item.addEventListener('mouseleave', (e) => {
-            this.fireCustomEvent(e.currentTarget, 'js-slider-start');
-        });
-    });
+        this.imageEvent()
+        this.navNextEvents()
+        this.navPrevEvents()
+        this.zoomEvents()
+    }
 
+    imageEvent() {
+        this.imagesList.forEach( (item) =>  {
+            item.addEventListener('click', (e) => {
+                this.fireCustomEvent(e.currentTarget, 'js-slider-img-click');
+            });
+             item.addEventListener('click', (e) => {
+                this.fireCustomEvent(e.currentTarget, 'js-slider-start');
+            });
+        });
+    }
+
+    navNextEvents() {
         const navNext = this.sliderRootElement.querySelector('.js-slider__nav--next');
         if(navNext) {
             navNext.addEventListener('click', () => {
@@ -41,7 +48,9 @@ export default class JSSLider {
                 this.fireCustomEvent(this.sliderRootElement, 'js-slider-stop')
             });
         }
+    }
 
+    navPrevEvents() {
         const navPrev = this.sliderRootElement.querySelector('.js-slider__nav--prev');
         if(navPrev) {
             navPrev.addEventListener('click', () => {
@@ -56,7 +65,9 @@ export default class JSSLider {
                 this.fireCustomEvent(this.sliderRootElement, 'js-slider-stop')
             });
         }
+    }
 
+    zoomEvents() {
         const zoom = this.sliderRootElement.querySelector('.js-slider__zoom');
         if(zoom) {
             zoom.addEventListener('click', (e) => {
@@ -78,6 +89,7 @@ export default class JSSLider {
     }
 
     initCustomEvents() {
+
     this.imagesList.forEach( img => {
         img.addEventListener('js-slider-img-click', (event) => {
             this.onImageClick(event);
@@ -162,20 +174,13 @@ export default class JSSLider {
     }
 
     startSlideShow() {
-
         this.interval = setInterval( () =>
             this.onImageNext(), 2000);
-
-        console.log('abc')
+            console.log('abc')
     }
-
-
 
     stopSlideShow() {
          clearInterval(this.interval)
     }
 
 }
-
-
-console.log(JSSLider)
