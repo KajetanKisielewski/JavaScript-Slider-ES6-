@@ -1,74 +1,73 @@
-> ⭐ ***README** to coś więcej niż opis. Poprzez nie **pokazujesz swoje mocne strony** – swoją dokładność, sposób myślenia i podejście do rozwiązywania problemów. Niech Twoje README pokaże, że masz **świetne predyspozycje do rozwoju!***
-> 
-> 🎁 *Zacznij od razu. Skorzystaj z **[szablonu README i wskazówek](https://github.com/devmentor-pl/readme-template)**.* 
+# JavaScript Slider - ES6+
 
-&nbsp;
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Links](#links)
+  - [Instalation](#instalation)
+  - [How it works](#how-it-works)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I Learned](#what-i-learned)
+- [Author](#author)
+- [Special thanks](#special-thanks)
 
+## Overview
 
-# JavaScript: ECMAScript 2015+ 
+![](./assets/img/Animation.gif)
 
-Twój poprzednik stworzył pokaz slajdów, który masz przebudować. Wykorzystaj w tym celu najnowsze standardy języka JavaScript.
+### The challenge
 
-Utworzymy klasę będąca modułem, który będzie reprezentował nasz Slider. Wspomniana klasa powinna być umieszczona w osobnym pliku, który importujemy w odpowiednim miejscu (pamiętaj również o eksporcie tej klasy).
+This project was created to develop and improve my skills in JavaScript ECMAScript 2015+.
+The task was to modificate one of my [previous project](https://github.com/KajetanKisielewski/JavaScript-Slider-Events-) using Javascript ES6+ and Events (including Customs Events). In the project, I tried to keep the code clean, guided by the principle of single responsibility.
 
-Wszędzie, gdzie to możliwe wykorzystuj rozwiązania poznane w ostatnio przerabianym materiale tj. destrukturyzacja, rozproszenie, wartości domyślne, funkcje strzałkowe itp.
+### Links
 
-Pamiętaj, o odpowiednim nazywaniu metod w klasie. Im bardziej jednoznacznie będzie określała ona jej czynność, tym lepiej.
+- Code: [See my code]()
+- Live: [Check it out]()
 
-Każda metoda powinna realizować jedno zadanie (analogicznie jak [zasada pojedynczej odpowiedzialności w klasach](https://pl.wikipedia.org/wiki/Zasada_jednej_odpowiedzialno%C5%9Bci)). Jeśli tak nie jest, spróbują ją podzielić na mniejsze części.
+### Instalation
 
-Wykorzystaj Webpacka, aby napisany kod w JavaScript był wpierany przez starsze przeglądarki tj. wszystkie wydane np. po 2016 roku i posiadający udział w rynku na poziomie co najmniej 1%.
+If you want to try a project, download it then use the command below in terminal
 
-## Implementacja
+````
+npm i
+````
 
-W plikach znajdziesz kod implementujący Slider, który wykorzystuje funkcje. Znajdziesz tam również, nieusunięte komentarze, które miały ułatwić zbudowanie odpowiedniej logiki.
+To run the project use the command below in terminal:
+````
+npm start
+````
 
-Zadanie ma być wykonane w taki sposób, aby poniższy kod uruchamiał całą mechanikę naszego rozwiązania:
+### How it works
 
-```
-import JSSlider from './modules/JSSlider';
+The images are randomly grouped into two groups each time the page is reloaded.
+After clicking on the selected image in gallery, a slide show is displayed, below the main image(selected) a collection of images from the same group is created.
+The user can switch between the next / previous photo by clicking the selected arrow.
+Hovering the mouse over the selected arrow stops the slideshow, moving beyond the arrow resumes the slideshow.
+Clicking on the area around the main image closes the slideshow and returns to the gallery.
 
-const init = () => {
-    const imagesList = document.querySelectorAll('.gallery__item');
-    imagesList.forEach( img => {
-        img.dataset.sliderGroupName = Math.random() > 0.5 ? 'nice' : 'good';
-    });
+## My Process
 
-    const jsSlider = new JSSlider('.gallery__item');
-    jsSlider.run();
-}
+### Built with
 
-document.addEventListener('DOMContentLoaded', init);
-```
+- HTML
+- CSS
+- JavaScript ES6+
+- BEM methodology
+- Webpack
+- Babel
 
-Najlepszym sposobem rozwiązania tego zadania będzie zbudowanie klasy od zera. Należy stopniowo przenosić poszczególne rozwiązania z funkcji do metod danej klasy.
+### What I learned
 
-Kiedy już przeniesiesz rozwiązania 1 do 1, to wtedy możesz zastanowić się nad [refaktoryzacją kodu](https://pl.wikipedia.org/wiki/Refaktoryzacja).
-
-Pamiętaj, że im częściej sprawdzasz przenoszony kod, tym łatwiej będzie Ci się w nim odnaleźć.
-## Zadania dodatkowe
-
-### Zadanie 1
-
-Postaraj się wykorzystać właściwości obiektu ('this.imagesList'), zamiast przekazywać wartości zmiennych przez parametry funkcji ('initEvents(imagesList, sliderRootElement)').
-
-To rozwiązanie zastosuj tylko dla zmiennych, które są wykorzystywane w różnych metodach.
-
-### Zadanie 2
-
-Utwórz 2 dodatkowe 'CustomEvent' o nazwach 'js-slider-start' oraz 'js-slider-stop'. Ich zadaniem jest uruchomienie lub zatrzymanie automatycznego przełączania zdjęć.
-
-Zdarzenie 'js-slider-start' jest uruchamiane w 2 przypadkach.
-- po kliknięciu w zdjęcie,
-- po zjechaniu kursorem ze strzałki.
-
-Zdarzenie 'js-slider-stop' jest uruchamiane, gdy użytkownik najedzie kursorem na strzałkę.
-
-**Uwaga!** Pamiętaj, aby sprawdzić, czy wszystko działa poprawnie, kiedy pokaz slajdów jest uruchamiany i zatrzymywany wieloktronie.
+Working on this project allowed me to gain knowledge about new solutions in JS (ES6+) i.e. classes, moduls, template strings, arrow functions, destructuring, rest operator, spread operator, default values and Webpack. Not all of this solutions was useing in this project.
+In the project, I also used the knowledge from previous projects, which allowed me to consolidate it even more.
 
 
-&nbsp;
+## Author
 
-> ⭐ ***README** to coś więcej niż opis. Poprzez nie **pokazujesz swoje mocne strony** – swoją dokładność, sposób myślenia i podejście do rozwiązywania problemów. Niech Twoje README pokaże, że masz **świetne predyspozycje do rozwoju!***
-> 
-> 🎁 *Zacznij od razu. Skorzystaj z **[szablonu README i wskazówek](https://github.com/devmentor-pl/readme-template)**.* 
+- Github - [Kajetan Kisielewski](https://github.com/KajetanKisielewski)
+- LinkedIn - [Kajetan Kisielewski](https://www.linkedin.com/in/kajetan-kisielewski-157b60208/)
+
+## Special thanks
+
+Thanks to my [Mentor - devmentor.pl](https://devmentor.pl/) - for providing me with this task and for code review.

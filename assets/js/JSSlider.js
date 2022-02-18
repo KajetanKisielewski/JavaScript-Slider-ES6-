@@ -4,8 +4,7 @@ export default class JSSLider {
         this.sliderRootSelector = sliderRootSelector;
     }
 
-    run() {
-
+    run = () => {
         this.imagesList = document.querySelectorAll(this.imagesSelector);
         this.sliderRootElement = document.querySelector(this.sliderRootSelector);
 
@@ -15,25 +14,23 @@ export default class JSSLider {
         this.interval;
     }
 
-    initEvents() {
+    initEvents = () => {
         this.imageEvent()
         this.navNextEvents()
         this.navPrevEvents()
         this.zoomEvents()
     }
 
-    imageEvent() {
+    imageEvent = () => {
         this.imagesList.forEach( (item) =>  {
             item.addEventListener('click', (e) => {
                 this.fireCustomEvent(e.currentTarget, 'js-slider-img-click');
-            });
-             item.addEventListener('click', (e) => {
-                this.fireCustomEvent(e.currentTarget, 'js-slider-start');
+                this.fireCustomEvent(this.sliderRootElement, 'js-slider-start');
             });
         });
     }
 
-    navNextEvents() {
+    navNextEvents = () => {
         const navNext = this.sliderRootElement.querySelector('.js-slider__nav--next');
         if(navNext) {
             navNext.addEventListener('click', () => {
@@ -50,7 +47,7 @@ export default class JSSLider {
         }
     }
 
-    navPrevEvents() {
+    navPrevEvents = () => {
         const navPrev = this.sliderRootElement.querySelector('.js-slider__nav--prev');
         if(navPrev) {
             navPrev.addEventListener('click', () => {
@@ -67,18 +64,19 @@ export default class JSSLider {
         }
     }
 
-    zoomEvents() {
+    zoomEvents = () => {
         const zoom = this.sliderRootElement.querySelector('.js-slider__zoom');
         if(zoom) {
             zoom.addEventListener('click', (e) => {
                 if(e.target === e.currentTarget) {
                     this.fireCustomEvent(this.sliderRootElement, 'js-slider-close');
+                    this.fireCustomEvent(this.sliderRootElement, 'js-slider-stop');
                 }
             })
         }
     }
 
-    fireCustomEvent(element, name) {
+    fireCustomEvent = (element, name) => {
         console.log(element.className, '=>', name);
 
         const event = new CustomEvent(name, {
@@ -88,99 +86,162 @@ export default class JSSLider {
         element.dispatchEvent( event );
     }
 
-    initCustomEvents() {
-
-    this.imagesList.forEach( img => {
-        img.addEventListener('js-slider-img-click', (event) => {
-            this.onImageClick(event);
+    initCustomEvents = () => {
+        this.imagesList.forEach( img => {
+            img.addEventListener('js-slider-img-click', (event) => {
+                this.onImageClick(event);
+            });
         });
-    });
 
-    this.sliderRootElement.addEventListener('js-slider-img-next', this.onImageNext);
-    this.sliderRootElement.addEventListener('js-slider-img-prev', this.onImagePrev);
-    this.sliderRootElement.addEventListener('js-slider-close', this.onClose);
-    this.sliderRootElement.addEventListener('js-slider-start', this.startSlideShow);
-    this.sliderRootElement.addEventListener('js-slider-stop', this.stopSlideShow);
+        this.sliderRootElement.addEventListener('js-slider-img-next', this.onImageNext);
+        this.sliderRootElement.addEventListener('js-slider-img-prev', this.onImagePrev);
+        this.sliderRootElement.addEventListener('js-slider-close', this.onClose);
+        this.sliderRootElement.addEventListener('js-slider-start', this.startSlideShow);
+        this.sliderRootElement.addEventListener('js-slider-stop', this.stopSlideShow);
     }
 
-   onImageClick(event) {
 
-    this.sliderRootElement.classList.add('js-slider--active');
-
-    const src = event.currentTarget.querySelector('img').src;
-    this.sliderRootElement.querySelector('.js-slider__image').src = src;
-
-    const groupName = event.currentTarget.dataset.sliderGroupName;
-    const thumbsList = document.querySelectorAll(this.imagesSelector+'[data-slider-group-name='+ groupName +']');
-    const prototype = document.querySelector('.js-slider__thumbs-item--prototype');
-
-    thumbsList.forEach( (item, index) => {
-
-        const thumbElement = prototype.cloneNode(true);
-        thumbElement.classList.remove('js-slider__thumbs-item--prototype');
-
-        const thumbImg = thumbElement.querySelector('img');
-        thumbImg.src = item.querySelector('img').src;
-
-        if(thumbImg.src === src) {
-            thumbImg.classList.add('js-slider__thumbs-image--current');
-            this.currentImgGroupIndex = index;
-        }
-
-        document.querySelector('.js-slider__thumbs').appendChild(thumbElement);
-    })
+   onImageClick = (event) => {
+       this.showSlider();
+       this.setSliderImg(event.currentTarget);
+       this.setSliderThumb(event);
     }
 
-    onImageNext(event) {
-    console.log(this, 'onImageNext');
+    onImageNext = (event) => {
+        const currentImg = this.getCurrentImg();
+        const nextElement = this.getNextElement(currentImg);
 
-    const currentClassName = 'js-slider__thumbs-image--current';
-    const current = this.querySelector('.'+currentClassName);
-
-    const parentCurrent = current.parentElement;
-    const nextElement = parentCurrent.nextElementSibling;
-
-    if(nextElement && !nextElement.className.includes('js-slider__thumbs-item--prototype')) {
-        const img = nextElement.querySelector('img')
-        img.classList.add(currentClassName);
-
-        this.querySelector('.js-slider__image').src = img.src;
-        current.classList.remove(currentClassName);
-    }
+        nextElement === null ? this.setFirstImgSrc() : this.setNextImgSrc(nextElement);
+        this.toggleCurrentClass();
     }
 
-    onImagePrev(event) {
-    console.log(this, 'onImagePrev');
+    onImagePrev = (event) => {
+        const currentImg = this.getCurrentImg();
+        const prevElement = this.getPrevElement(currentImg);
 
-    const currentClassName = 'js-slider__thumbs-image--current';
-    const current = this.querySelector('.'+currentClassName);
-
-    const parentCurrent = current.parentElement;
-    const prevElement = parentCurrent.previousElementSibling;
-
-    if(prevElement && !prevElement.className.includes('js-slider__thumbs-item--prototype')) {
-        const img = prevElement.querySelector('img')
-        img.classList.add(currentClassName);
-
-        this.querySelector('.js-slider__image').src = img.src;
-        current.classList.remove(currentClassName);
-    }
+        prevElement.classList.contains('js-slider__thumbs-item--prototype') ? this.setLastImgSrc() : this.setPrevImgSrc(prevElement);
+        this.toggleCurrentClass();
     }
 
-    onClose(event) {
-    event.currentTarget.classList.remove('js-slider--active');
-    const thumbsList = this.querySelectorAll('.js-slider__thumbs-item:not(.js-slider__thumbs-item--prototype)');
-    thumbsList.forEach( item => item.parentElement.removeChild(item));
+    onClose = (event) => {
+        this.closeSlider()
+        this.clearSliderThumb()
     }
 
-    startSlideShow() {
+    showSlider = () => {
+        this.sliderRootElement.classList.add('js-slider--active');
+    }
+
+    closeSlider = () => {
+        this.sliderRootElement.classList.remove('js-slider--active');
+    }
+
+    setSliderImg = (selectedImg) => {
+        const selectedImgSrc = selectedImg.querySelector('img').src;
+        this.getSliderImg().src = selectedImgSrc;
+    }
+
+    setSliderThumb = (event) => {
+        const thumbImagesList = this.getThumbImagesByGroupName(event);
+
+        thumbImagesList.forEach( (item) => {
+            const thumbItem = this.createThumbItem();
+            this.setThumbItemImgSrc(thumbItem, item);
+            this.toggleCurrentClass();
+            this.getSliderThumb().appendChild(thumbItem);
+        } )
+    }
+
+    clearSliderThumb = () => {
+        const sliderThumb = this.getSliderThumb()
+        const sliderThumbImgList = this.getSliderThumbImgList();
+        sliderThumbImgList.forEach( item => sliderThumb.removeChild(item.parentElement) );
+    }
+
+    toggleCurrentClass = () => {
+        const sliderImgSrc = this.getSliderImg().src;
+        const sliderThumbImgList = this.getSliderThumbImgList()
+
+        sliderThumbImgList.forEach( (img) => {
+            img.src === sliderImgSrc ? img.classList.add('js-slider__thumbs-image--current') : img.classList.remove('js-slider__thumbs-image--current');
+        })
+    }
+
+    getSliderThumbImgList = () => {
+        return this.getSliderThumb().querySelectorAll('.js-slider__thumbs-item:not(.js-slider__thumbs-item--prototype) img');
+    }
+
+    getSliderThumb = () => {
+        return this.sliderRootElement.querySelector('.js-slider__thumbs');
+    }
+
+    getThumbImagesByGroupName = (event) => {
+        const groupName = event.currentTarget.dataset.sliderGroupName;
+        return document.querySelectorAll(this.imagesSelector+'[data-slider-group-name='+ groupName +']');
+    }
+
+    setThumbItemImgSrc = (thumbItem, item) => {
+        this.getThumbItemImg(thumbItem).src = item.querySelector('img').src;
+    }
+
+    getThumbItemImg = (thumbItem) => {
+        return thumbItem.querySelector('img');
+    }
+
+    createThumbItem = () => {
+        const thumbItem = this.getThumbItemPrototype().cloneNode(true);
+        thumbItem.classList.remove('js-slider__thumbs-item--prototype');
+        return thumbItem;
+    }
+
+    getThumbItemPrototype = () => {
+        return this.sliderRootElement.querySelector('.js-slider__thumbs-item--prototype');
+    }
+
+    setNextImgSrc = (nextElement) => {
+        const nextElementImgSrc = nextElement.querySelector('img').src;
+        this.getSliderImg().src = nextElementImgSrc;
+    }
+
+    setFirstImgSrc = () => {
+        const firstImgSrc = this.sliderRootElement.querySelector('.js-slider__thumbs-item:nth-child(2) img').src;
+        this.getSliderImg().src = firstImgSrc;
+    }
+
+    setPrevImgSrc = (prevElement) => {
+        const prevElementImgSrc = prevElement.querySelector('img').src;
+        this.getSliderImg().src = prevElementImgSrc;
+    }
+
+    setLastImgSrc = () => {
+        const lastImgSrc = this.sliderRootElement.querySelector('.js-slider__thumbs-item:last-child img').src;
+        this.getSliderImg().src = lastImgSrc;
+    }
+
+    getNextElement = (currentImg) => {
+        return currentImg.parentElement.nextElementSibling;
+    }
+
+    getPrevElement = (currentImg) => {
+        return currentImg.parentElement.previousElementSibling;
+    }
+
+    getCurrentImg = () => {
+        return this.sliderRootElement.querySelector('.js-slider__thumbs-image--current');
+    }
+
+    getSliderImg = () => {
+        return this.sliderRootElement.querySelector('.js-slider__image');
+    }
+
+    startSlideShow = () => {
         this.interval = setInterval( () =>
-            this.onImageNext(), 2000);
-            console.log('abc')
+            this.onImageNext(), 2000
+        );
     }
 
-    stopSlideShow() {
-         clearInterval(this.interval)
+    stopSlideShow = () => {
+        clearInterval(this.interval)
     }
 
 }

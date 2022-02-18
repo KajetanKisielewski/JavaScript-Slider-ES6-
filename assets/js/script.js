@@ -8,7 +8,6 @@ const init = () => {
     });
 
     const jsSlider = new JSSlider('.gallery__item' , '.js-slider');
-    console.log(jsSlider)
     jsSlider.run();
 }
 
