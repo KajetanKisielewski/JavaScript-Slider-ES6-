@@ -22,8 +22,8 @@ The task was to modificate one of my [previous project](https://github.com/Kajet
 
 ### Links
 
-- Code: [See my code]()
-- Live: [Check it out]()
+- Code: [See my code](https://github.com/KajetanKisielewski/JavaScript-Slider-ES6-/tree/master/assets)
+- Live: [Check it out](https://kajetankisielewski.github.io/JavaScript-Slider-ES6-/)
 
 ### Instalation
 
